@@ -78,7 +78,7 @@ namespace example.Controllers
             if(product != null )
             {
                 _context.Remove(product);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return Ok(product);
             }
 

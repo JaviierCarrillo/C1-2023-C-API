@@ -41,5 +41,20 @@ public partial class ProductsdbContext : DbContext
         OnModelCreatingPartial(modelBuilder);
     }
 
+    public override int SaveChanges()
+    {
+        //Borrado suave
+        foreach (var item in ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Deleted && e.Metadata.GetProperties().Any(x => x.Name == "IsDeleted")))
+        {
+            item.State = EntityState.Unchanged;
+            item.CurrentValues["IsDeleted"] = true;
+        }
+
+        return base.SaveChanges();
+    }
+
+    
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
